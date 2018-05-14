@@ -1,7 +1,6 @@
 # TODO:
 #
 #  different service distribution strategies (currently random)
-#  multiple runs to test for exhaustion
 #
 
 class Instance
@@ -51,6 +50,19 @@ class Instance
     end
   end
 
+  def undeploy(task)
+    tasks.delete task
+
+    @free_cpu += task.cpu
+    @free_mem += task.mem
+  end
+
+  def reset
+    until tasks.empty? do
+      undeploy tasks.last
+    end
+  end
+
 end
 
 class Task
@@ -69,8 +81,11 @@ end
 
 class DistinctTask < Task
   def accept?(instance)
-    !instance.tasks.include? self
+    !instance.tasks.map(&:name).include? self.name
   end
+end
+
+class ResourceExhaustionError < StandardError
 end
 
 class Service
@@ -82,7 +97,7 @@ class Service
   end
 
   def tasks
-    [task] * count
+    count.times.map { task.dup }
   end
 
   def size
@@ -105,7 +120,9 @@ class Cluster
       target = instances.select { |i| i.accept? task }.sample
 
       if target.nil?
-        warn "Ran out allocating task %s (%s of %s)" % [
+        err = []
+
+        err << "Ran out allocating task %s (%s of %s):" % [
           task.name, n, service.size
         ]
 
@@ -117,15 +134,15 @@ class Cluster
           end
         end
 
-        resources_used_up.sort.each do |res, count|
-          warn "%3s (%2.f%%) instances out of %s" % [
+        err << resources_used_up.sort.map do |res, count|
+          " * %3s (%2.f%%) instances out of %s" % [
             count,
             count / instances.size.to_f * 100,
             res
           ]
         end
 
-        abort "No instances left for task."
+        raise ResourceExhaustionError.new(err.flatten.join("\n"))
 
       end
 
@@ -193,6 +210,12 @@ class Cluster
     ]
   end
 
+  def reset
+    instances.each do |instance|
+      instance.reset
+    end
+  end
+
   private
 
   def gb(mb)
@@ -204,3 +227,52 @@ class Cluster
   end
 end
 
+# A class to facilitize multiple deployment run-throughs, as some placement
+# strategies can be non-deterministic.
+class Simulator
+
+  attr_reader :cluster, :services
+
+  def initialize(cluster, services)
+    @cluster = cluster
+    @services = services
+  end
+
+  def simulate(n = 100)
+    STDOUT.sync
+
+    errors = []
+
+    n.times do |i|
+      begin
+        services.each do |service|
+          cluster.deploy service
+        end
+
+      rescue ResourceExhaustionError => e
+        print "F"
+
+        errors << e
+      end
+
+      print "."
+
+      cluster.reset
+    end
+
+    puts
+    puts
+    puts "After %s runs, %s succeeded, %s failed (%.2f%% failure rate)" % [
+      n,
+      n - errors.size,
+      errors.size,
+      errors.size / n.to_f * 100
+    ]
+
+    puts "with the following errors:" unless errors.empty?
+
+    errors.each do |e|
+      puts e
+    end
+  end
+end
