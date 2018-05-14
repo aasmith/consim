@@ -1,6 +1,5 @@
 # TODO:
 #
-#  distinctinstance on task
 #  different service distribution strategies (currently random)
 #  multiple runs to test for exhaustion
 #
@@ -17,7 +16,7 @@ class Instance
   end
 
   def accept?(task)
-    free_cpu?(task) && free_mem?(task)
+    free_cpu?(task) && free_mem?(task) && task.accept?(self)
   end
 
   def free_cpu?(task)
@@ -61,6 +60,16 @@ class Task
     @name = name
     @cpu = cpu
     @mem = mem
+  end
+
+  def accept?(instance)
+    true
+  end
+end
+
+class DistinctTask < Task
+  def accept?(instance)
+    !instance.tasks.include? self
   end
 end
 
