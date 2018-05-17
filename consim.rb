@@ -106,6 +106,14 @@ class Service
   def size
     tasks.size
   end
+
+  def cpu
+    count * task.cpu
+  end
+
+  def mem
+    count * task.mem
+  end
 end
 
 class Cluster
