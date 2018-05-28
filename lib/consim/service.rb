@@ -3,9 +3,10 @@ module Consim
   class Service
     attr_reader :task, :count
 
-    def initialize(count, task)
+    def initialize(count, task, name = nil)
       @count = count
       @task = task
+      @name = name
     end
 
     def tasks
@@ -22,6 +23,10 @@ module Consim
 
     def mem
       count * task.mem
+    end
+
+    def name
+      @name || task.name
     end
   end
 
