@@ -12,6 +12,12 @@ module Consim
     def accept?(instance)
       true
     end
+
+    def inspect
+      "%s %s: (%s cpu, %s mem)" % [
+        self.class.name.split("::").last, name, cpu, mem
+      ]
+    end
   end
 
   class DistinctTask < Task

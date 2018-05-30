@@ -28,6 +28,12 @@ module Consim
     def name
       @name || task.name
     end
+
+    def inspect
+      "Service %s:\n  %s x %s\n  Total: %s cpu, %s mem" % [
+        name, size, task.inspect, cpu, mem
+      ]
+    end
   end
 
 end
