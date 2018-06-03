@@ -47,6 +47,10 @@ module Consim
   # Picks a random instance.
   RandomStrategy = :sample.to_proc
 
+  # Binpackers - picks the instance with the scarcest resource.
+  BinpackMem = lambda { |instances| instances.min_by &:free_mem }
+  BinpackCpu = lambda { |instances| instances.min_by &:free_cpu }
+
   DefaultStrategy = LeastTaskStrategy
 
 end
