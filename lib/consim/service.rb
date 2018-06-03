@@ -1,9 +1,10 @@
 module Consim
 
   class Service
-    attr_reader :task, :count
+    attr_reader :task, :count, :strategy
 
-    def initialize(count, task, name = nil)
+    def initialize(count, task, name = nil, strategy: DefaultStrategy)
+      @strategy = strategy
       @count = count
       @task = task
       @name = name
@@ -29,11 +30,23 @@ module Consim
       @name || task.name
     end
 
+    def choose(instances)
+      strategy.call instances
+    end
+
     def inspect
       "Service %s:\n  %s x %s\n  Total: %s cpu, %s mem" % [
         name, size, task.inspect, cpu, mem
       ]
     end
   end
+
+  # Picks an instance running the fewest tasks.
+  LeastTaskStrategy = lambda { |instances| instances.min_by &:task_count }
+
+  # Picks a random instance.
+  RandomStrategy = :sample.to_proc
+
+  DefaultStrategy = LeastTaskStrategy
 
 end

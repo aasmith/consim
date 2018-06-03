@@ -31,6 +31,10 @@ module Consim
       mem - free_mem
     end
 
+    def task_count
+      tasks.size
+    end
+
     def exhausted(task)
       [].tap do |resources|
         resources << "cpu" unless free_cpu?(task)

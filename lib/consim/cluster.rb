@@ -14,7 +14,7 @@ module Consim
 
       service.tasks.each.with_index do |task, n|
 
-        # take a random instance that accepts task
+        # find eligible instances for this task.
         cache ||= instances.select { |i| i.accept? task }
 
         # build the list of acceptable instances once, and store
@@ -28,10 +28,9 @@ module Consim
           cache.delete last
         end
 
-        last = cache.sample
+        last = service.choose(cache)
 
         target = last
-
 
         if target.nil?
           err = []
