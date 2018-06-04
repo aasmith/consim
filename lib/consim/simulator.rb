@@ -12,8 +12,6 @@ module Consim
     end
 
     def simulate(n = 100)
-      STDOUT.sync
-
       errors = []
 
       n.times do |i|
