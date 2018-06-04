@@ -13,8 +13,6 @@ end
 
 # TODO:
 #
-#  different service distribution strategies (currently random)
-#  example
 #  docs
 #  enforce task unique names
 #
