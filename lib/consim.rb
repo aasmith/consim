@@ -3,6 +3,7 @@ require "consim/service"
 require "consim/instance"
 require "consim/cluster"
 require "consim/simulator"
+require "consim/strategies"
 
 module Consim
 
