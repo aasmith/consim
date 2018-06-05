@@ -3,7 +3,7 @@ module Consim
   class Service
     attr_reader :task, :count, :strategy
 
-    def initialize(count, task, name = nil, strategy: DefaultStrategy.new)
+    def initialize(count, task, name = nil, strategy: DefaultStrategy)
       @strategy = strategy
       @count = count
       @task = task
@@ -28,10 +28,6 @@ module Consim
 
     def name
       @name || task.name
-    end
-
-    def choose(instances)
-      strategy.call instances
     end
 
     def inspect

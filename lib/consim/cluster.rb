@@ -13,6 +13,8 @@ module Consim
       cache = nil
       last = nil
 
+      strategy = service.strategy.new
+
       service.tasks.each.with_index do |task, n|
 
         # find eligible instances for this task.
@@ -29,7 +31,7 @@ module Consim
           cache.delete last
         end
 
-        last = service.choose(cache)
+        last = strategy.call(cache)
 
         target = last
 
