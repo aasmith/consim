@@ -48,6 +48,8 @@ module Consim
         @free_mem -= task.mem
 
         tasks << task
+      else
+        raise TaskTooLargeError.new(task, self)
       end
     end
 
@@ -64,6 +66,22 @@ module Consim
       end
     end
 
+  end
+
+  class TaskTooLargeError < StandardError
+    attr_reader :task, :instance
+
+    def initialize(task, instance)
+      @task = task
+      @instance = instance
+    end
+
+    def message
+      "Unable to place %s on instance %s" % [
+        task.inspect,
+        instance.inspect
+      ]
+    end
   end
 
 end
