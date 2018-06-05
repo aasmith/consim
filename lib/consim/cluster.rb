@@ -6,6 +6,7 @@ module Consim
 
     def initialize(instances)
       @instances = instances
+      @services = []
     end
 
     def deploy(service)
@@ -61,6 +62,8 @@ module Consim
 
         target.deploy task
       end
+
+      @services << service
     end
 
     def summary
