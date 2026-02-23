@@ -25,7 +25,7 @@ services = [
     strategy: Consim::LeastTaskStrategy),
 
   # Run a tiny service to be randomly spread out.
-  Consim::Service.new(213, Consim::Task.new("Web", cpu: Consim::VCPU/8, mem: 64),
+  Consim::Service.new(213, Consim::Task.new("Tiny", cpu: Consim::VCPU/8, mem: 64),
     strategy: Consim::RandomStrategy)
 ]
 

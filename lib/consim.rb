@@ -11,8 +11,3 @@ module Consim
   VCPU = 1024
 
 end
-
-# TODO:
-#
-#  enforce task unique names
-#

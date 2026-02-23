@@ -10,6 +10,10 @@ module Consim
     end
 
     def deploy(service)
+      if services.any? { |s| s.name == service.name }
+        raise DuplicateServiceError.new(service.name)
+      end
+
       cache = nil
       last = nil
 
@@ -132,6 +136,8 @@ module Consim
       instances.each do |instance|
         instance.reset
       end
+
+      @services = []
     end
 
     private
@@ -146,6 +152,12 @@ module Consim
   end
 
   class ResourceExhaustionError < StandardError
+  end
+
+  class DuplicateServiceError < StandardError
+    def initialize(name)
+      super("Service '%s' has already been deployed" % name)
+    end
   end
 
 end
