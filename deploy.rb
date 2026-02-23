@@ -1,6 +1,6 @@
-# Example of basic usage.
+# Example of deploying services to a cluster.
 #
-# $ ruby -Ilib example.rb
+# $ ruby -Ilib deploy.rb
 
 require "consim"
 

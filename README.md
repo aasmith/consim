@@ -11,7 +11,7 @@ production.
 ## Usage
 
 ```sh
-ruby -Ilib example.rb
+ruby -Ilib deploy.rb
 ruby -Ilib simulate.rb
 ```
 
