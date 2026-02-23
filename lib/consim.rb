@@ -14,6 +14,5 @@ end
 
 # TODO:
 #
-#  docs
 #  enforce task unique names
 #
