@@ -12,6 +12,7 @@ production.
 
 ```sh
 ruby -Ilib example.rb
+ruby -Ilib simulate.rb
 ```
 
 Consim is pure Ruby with no dependencies.
